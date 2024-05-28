@@ -1,0 +1,163 @@
+{% extends 'ticketapp/index.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+    @media (max-width: 426px){
+    .board_card_list {
+        width: 35%;
+        margin-bottom: 10px;
+    }
+    .board_wrapper .single_board .main_board_card {
+        max-height: 100%;
+        overflow: hidden;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -ms-flex-pack: distribute;
+        justify-content: space-around;
+        margin-bottom: 12px;
+        border-radius: 4px;
+        padding: 5px;
+        background: #f1f5fa;
+    }
+    .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        width: 100%;
+        padding-right: var(--bs-gutter-x, 0.75rem);
+        padding-left: var(--bs-gutter-x, 0.75rem);
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+</style>
+</head>
+<div class="main_content_iner overly_inner ">
+    <div class="container-fluid p-0 ">
+        {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {% else %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {% endif %}
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="row">
+            <div class="col-12">
+                <div class="page_title_box d-flex align-items-center justify-content-between">
+                    <div class="page_title_left">
+                        <h3 class="f_s_30 f_w_700 text_white">All Tickets</h3>
+                        <ol class="breadcrumb page_bradcam mb-0">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Tickets </a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">All Tickets</a></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-12">
+                <div class="white_card">
+                    <div class="card-body">
+                        <div class="board_wrapper">
+                            <div class="single_board">
+                                <div class="main_board_card">
+                                    <div class="white_card_header ps-0 pe-0 pt-0">
+                                        <div class="box_header m-0">
+                                            <div class="main-title">
+                                                <h3 class="m-0">All Tickets</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="board_card_list">
+                                        <div class="container">
+                                            <div class="row">
+                                                {% for i in ticket_list %}
+                                                <div class="col-lg-4 col-md-6 col-sm-12"> <!-- Adjust column classes for responsiveness -->
+                                                    <a href="{% if i.status == 'Open' %}{% url 'ticket_details' tkt_id=i.ticket_id %}
+                                                    {% elif i.status == 'Accepted' or i.status == 'Declined' %}{% url 'dashboard_ticket_details' tkt_id=i.ticket_id %}
+                                                    {% endif %}">
+                                                        <div class="card border-0">
+                                                            <div class="card-body">
+                                                                <div class="card_head d-flex justify-content-between align-items-center">
+                                                                    <div style="flex: 1;">
+                                                                        <!-- Left content goes here -->
+                                                                    </div>
+                                                                    <div class="ticket_status_badge text-end">
+                                                                        {% if i.status == 'Accepted' %}
+                                                                            <span class="badge bg-success">{{i.status|capfirst}}</span>
+                                                                        {% elif i.status == 'Declined' %}
+                                                                            <span class="badge bg-danger">{{i.status|capfirst}}</span>
+                                                                        {% elif i.status == 'Open' %}
+                                                                            <span class="badge bg-warning">{{i.status|capfirst}}</span>
+                                                                        {% else %}
+                                                                            <span class="badge bg-primary">{{i.status|capfirst}}</span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                                <h5 class="f_s_16 f_w_500 mb-0">{{i.ticket_id}}</h5>
+                                                                <p class="text-muted mb-2">{{i.product_name}}</p>
+                                                                <!-- Set a fixed width for the New Ticket Id element -->
+                                                                <p class="text-muted mb-2" style="width: 150px; white-space: nowrap; text-overflow: ellipsis;">
+                                                                    New Ticket Id: <span style="color: #FFA500;">{{i.new_ticket_id}}</span>
+                                                                </p>
+                                                                <div class="row justify-content-center align-items-center">
+                                                                <div class="col-6 align-self-center">
+                                                                    <ul
+                                                                        class="list-inline mb-0 d-flex align-items-center">
+                                                                       
+                                                                        <li
+                                                                            class="list-item d-inline-block d-flex align-items-center">
+                                                                            <a class="d-flex align-items-center"
+                                                                                href="#">
+                                                                               
+                                                                                <span
+                                                                                    class="text-muted fw-bold">{{i.date_of_purchase}}</span>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+
+                                                                <div class="col-6 align-self-center">
+                                                                    <a class="float-end" href="#">
+                                                                        <div class="thumb_34 ms-1 mt-0"><img
+                                                                                class="img-fluid radius_50"
+                                                                                src="img/customers/1.png" alt></div>
+                                                                    </a>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div></a>
+                                                </div>
+
+                                              {% endfor %}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

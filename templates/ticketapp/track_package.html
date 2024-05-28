@@ -1,0 +1,335 @@
+{% extends 'ticketapp/index.html' %}
+{% load static %}
+{% block content %}
+<head>
+ 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   
+</head>
+<style>
+    /* Customize the color of the confirm button */
+    div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+        background-color: #64c5b1; /* Change to the desired color */
+        color: white; /* Text color */
+    }
+</style>
+ 
+<style>
+ 
+@media (max-width: 991px) {
+   
+    .top-status,.bottom-status {
+        white-space: normal; /* Allow text to wrap onto multiple lines in tablet view */
+    }
+}
+ 
+@media (max-width: 767px) {
+    .status-container .order-tracking {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+ 
+    .mobile-view .order-tracking::before {
+        display: none; /* Hide the orange lines for mobile view */
+    }
+ 
+    .bottom-status {
+        display: block; /* Display bottom status in mobile view */
+        position: absolute; /* Position bottom status */
+        top: -30px; /* Adjust vertical position to be above the circle */
+        white-space: nowrap; /* Prevent line breaks */
+        padding-bottom: 50px; /* Increase the space between each status in mobile view */
+    }
+    .top-status {
+        display: block; /* Ensure all statuses are displayed at the top in mobile view */
+        white-space: nowrap; /* Prevent line breaks */
+        padding-bottom: 50px;
+    }
+ 
+    .order-tracking {
+        margin-bottom: 40px !important; /* Increase the space between each status in mobile view */
+    }
+ 
+}
+/* For desktop view */
+@media (min-width: 768px) {
+    .bottom-status {
+        display: block;
+    }
+}
+ 
+ 
+    .hh-grayBox {
+        background-color: #F8F8F8;
+        margin-bottom: 100px;
+        padding: 95px;
+        margin-top: 70px;
+        width: 100%;
+    }
+    .pt45 {
+        padding-top: 45px;
+    }
+    .order-tracking {
+        text-align: center;
+        width: calc(10% - 20px);
+        margin-right: 20px;
+        position: relative;
+        display: inline-block;
+    }
+    .order-tracking .is-complete {
+        display: block;
+        position: relative;
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
+        border: 0px solid #AFAFAF;
+        background-color: #f7be16;
+        margin: 0 auto;
+        transition: background 0.25s linear;
+        -webkit-transition: background 0.25s linear;
+        z-index: 2;
+    }
+    .order-tracking.completed .is-complete {
+        border-color: #27aa80; /* Change the border color to green */
+        border-width: 0px;
+        background-color: #27aa80; /* Change the background color to green */
+    }
+    .order-tracking .is-complete:after {
+        display: block;
+        position: absolute;
+        content: '';
+        height: 14px;
+        width: 7px;
+        top: -2px;
+        bottom: 0;
+        left: 5px;
+        margin: auto 0;
+        border: 0px solid #AFAFAF;
+        border-width: 0px 2px 2px 0;
+        transform: rotate(45deg);
+        opacity: 0;
+    }
+    .order-tracking.completed .is-complete:after {
+        border-color: #fff;
+        border-width: 0px 3px 3px 0;
+        width: 7px;
+        left: 11px;
+        opacity: 1;
+    }
+    .order-tracking p {
+        color: #A4A4A4;
+        font-size: 16px;
+        margin-top: 8px;
+        margin-bottom: 0;
+        line-height: 20px;
+    }
+    .order-tracking.completed p {
+        color:  #A4A4A4;
+    }
+    .order-tracking::before {
+        content: '';
+        display: block;
+        height: 3px;
+        width: calc(100% - 40px);
+        background-color: #f7be16;
+        top: 13px;
+        position: absolute;
+        left: calc(-50% + 20px);
+        z-index: 0;
+    }
+    .order-tracking:first-child:before {
+        display: none;
+    }
+    .order-tracking.completed:before {
+        background-color: #f7be16;
+    }
+    .top-status, .bottom-status {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .top-status {
+        top: -30px;
+    }
+    .bottom-status {
+        bottom: -60px;
+    }
+ 
+ 
+    @media (max-width: 1366px) {
+    .col-md-10 {
+        width: 100%; /* Adjust the width of the column */
+    }
+}
+</style>
+ 
+ 
+   
+<div class="main_content_iner overly_inner ">
+<div class="container-fluid p-0 ">
+<div class="row">
+    <div class="col-12">
+    <div class="page_title_box d-flex align-items-center justify-content-between">
+    <div class="page_title_left">
+    <h3 class="f_s_30 f_w_700 text_white">Shipment Tracking Details</h3>
+   
+    </div>
+   
+    </div>
+    </div>
+    </div>
+    <div class="row">
+   
+    <div class="col-lg-12">
+    <div class="white_card">
+        <div class="white_card_header border_bottom_1px">
+            <div class="row">
+                <div class="col-md-6 text-left">
+                    <h4 class="card-title mb-0">Ticket Id: &nbsp{{ awbresponse.ticket_id }}</h4>
+                </div>
+                <div class="col-md-6 text-right">
+                    <h4 class="card-title mb-0">AWB Number: &nbsp{{ awbresponse.awb_number }}</h4>
+                </div>
+            </div>
+        </div>
+       
+   
+    <div class="card-body">
+        <div class="col-lg-8">
+            <div class="white_card card_height_100 mb_20 ">
+            <div class="white_card_header">
+            <div class="box_header m-0">
+            <div class="main-title">
+            <h3 class="m-0">Order Status</h3>
+            </div>
+            </div>
+            </div>
+            <div class="white_card_body QA_section">
+            <div class="QA_table ">
+                {% if shipment_response %}
+            <table class="table">
+            <tbody>
+            <tr>
+            <td>
+            <div class="customer d-flex align-items-center">
+            <span class="f_s_20 f_w_400 color_text_3">Shipment Status</span>
+            </div>
+            </td>
+            <td class="f_s_14 f_w_400 color_text_4">{{ shipment_response.shipment_status }}</td>
+            </tr>
+            <tr>
+            <td>
+            <div class="customer d-flex align-items-center">
+            <span class="f_s_20 f_w_400 color_text_3">Shipment Status Date and Time</span>
+            </div>
+            </td>
+            <td class="f_s_14 f_w_400 color_text_4">{{ shipment_response.shipment_status_datetime }}</td>
+            </tr>
+            <tr>
+            <td>
+            <div class="customer d-flex align-items-center">
+            <span class="f_s_20 f_w_400 color_text_3">Description</span>
+            </div>
+            </td>
+            <td class="f_s_14 f_w_400 color_text_4">{{ shipment_response.description }}</td>
+            </tr>
+            <tr>
+                <td>
+                <div class="customer d-flex align-items-center">
+                <span class="f_s_20 f_w_400 color_text_3">Hub Location</span>
+                </div>
+                </td>
+                <td class="f_s_14 f_w_400 color_text_4">{{ shipment_response.hub_location }}</td>
+            </tr>
+            <tr>
+                <td>
+                <div class="customer d-flex align-items-center">
+                <span class="f_s_20 f_w_400 color_text_3">City</span>
+                </div>
+                </td>
+                <td class="f_s_14 f_w_400 color_text_4">{{ shipment_response.city }}</td>
+            </tr>
+            <tr>
+                <td>
+                <div class="customer d-flex align-items-center">
+                <span class="f_s_20 f_w_400 color_text_3">State</span>
+                </div>
+                </td>
+                <td class="f_s_14 f_w_400 color_text_4">{{ shipment_response.state }}</td>
+            </tr>
+            </tbody>
+            </table>
+            {% else %}
+                <p>No records found for the AWB number.</p>
+            {% endif %}
+            </div>
+            </div>
+            </div>
+            </div>
+    </div>
+    </div> 
+    <!-- <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-10 hh-grayBox pt45 pb20">
+                <div class="tracking-item">
+                </div>
+     
+                <div style="margin-top: 80px;"></div>
+                <div class="row justify-content-between status-container mobile-view">
+ 
+                   
+                <div class="row justify-content-between status-container">
+                        <div class="order-tracking {% if shipment_response.description == 'RPPickupPending' %}completed{% endif %}">
+                            <span class="is-complete"></span>
+                            <p class="top-status {% if shipment_response.description == 'RPPickupPending' %}" style="color: green;"{% else %}" style="color: grey;"{% endif %}>RPPickupPending</p>
+                        </div>
+                        <div class="order-tracking {% if shipment_response.description == 'OutForPickup' %}completed{% endif %}">
+                            <span class="is-complete"></span>
+                            <p class="bottom-status {% if shipment_response.description == 'OutForPickup' %}" style="color: green;"{% else %}" style="color: grey;"{% endif %}>OutForPickup</p>
+                        </div>
+                        <div class="order-tracking {% if shipment_response.description == 'PickDone' %}completed{% endif %}">
+                            <span class="is-complete"></span>
+                            <p class="top-status {% if shipment_response.description == 'PickDone' %}" style="color: green;"{% else %}" style="color: grey;"{% endif %}>PickDone</p>
+                        </div>
+                        <div class="order-tracking {% if shipment_response.description == 'Status of NPR Reason' %}completed{% endif %}">
+                            <span class="is-complete"></span>
+                            <p class="bottom-status {% if shipment_response.description == 'Status of NPR Reason' %}" style="color: green;"{% else %}" style="color: grey;"{% endif %}>Status of NPR Reason</p>
+                        </div>
+                        <div class="order-tracking {% if shipment_response.description == 'RPCancel' %}completed{% endif %}">
+                            <span class="is-complete"></span>
+                            <p class="top-status {% if shipment_response.description == 'RPCancel' %}" style="color: green;"{% else %}" style="color: grey;"{% endif %}>RPCancel</p>
+                        </div>
+                        <div class="order-tracking {% if shipment_response.description == 'InTransit' %}completed{% endif %}">
+                            <span class="is-complete"></span>
+                            <p class="bottom-status {% if shipment_response.description == 'InTransit' %}" style="color: green;"{% else %}" style="color: grey;"{% endif %}>InTransit</p>
+                        </div>
+                        <div class="order-tracking {% if shipment_response.description == 'ReachedAtDestination' %}completed{% endif %}">
+                            <span class="is-complete"></span>
+                            <p class="top-status {% if shipment_response.description == 'ReachedAtDestination' %}" style="color: green;"{% else %}" style="color: grey;"{% endif %}>ReachedAtDestination</p>
+                        </div>
+                        <div class="order-tracking {% if shipment_response.description == 'Out for Delivery' %}completed{% endif %}">
+                            <span class="is-complete"></span>
+                            <p class="bottom-status {% if shipment_response.description == 'Out for Delivery' %}" style="color: green;"{% else %}" style="color: grey;"{% endif %}>Out for Delivery</p>
+                        </div>
+                        <div class="order-tracking {% if shipment_response.description == 'Undelivered' %}completed{% endif %}">
+                            <span class="is-complete"></span>
+                            <p class="top-status {% if shipment_response.description == 'Undelivered' %}" style="color: green;"{% else %}" style="color: grey;"{% endif %}>Undelivered</p>
+                        </div>
+                        <div class="order-tracking {% if shipment_response.description == 'DLVD' %}completed{% endif %}">
+                            <span class="is-complete"></span>
+                            <p class="bottom-status {% if shipment_response.description == 'DLVD' %}" style="color: green;"{% else %}" style="color: grey;"{% endif %}>DLVD</p>
+                        </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div> -->
+    </div>
+    </div>
+</div> 
+</div>
+   
+{% endblock %}

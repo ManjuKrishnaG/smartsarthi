@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tickets PDF</title>
+    <style type="text/css">
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tickets PDF</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Ticket id</th>
+                <th>Product name</th>
+                <th>Variant no</th>
+                <th>Problem category</th>
+                <th>Date of purchase</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets_list %}
+            <tr>
+                <td>{{ ticket.ticket_id }}</td>
+                <td>{{ ticket.product_name }}</td>
+                <td>{{ ticket.variant_no }}</td>
+                <td>{{ ticket.problem_category }}</td>
+                <td>{{ ticket.date_of_purchase }}</td>
+                <td>{{ ticket.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

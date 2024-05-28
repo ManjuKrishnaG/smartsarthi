@@ -1,0 +1,261 @@
+{% extends 'ticketapp/index.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<style>
+ .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        max-width: 90%;
+        height: auto;
+        max-height: 90vh;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.9);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Modal Content (image and video) */
+    .modal-content {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    /* Close button */
+    .close {
+        color: red;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        position: absolute;
+        top: 1px;
+        right: 20px;
+        z-index: 99999;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: red;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Customize the color of the confirm button */
+    div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+        background-color: #64c5b1; /* Change to the desired color */
+        color: white; /* Text color */
+    }
+</style>
+
+<div class="main_content_iner overly_inner ">
+<div class="container-fluid p-0 ">
+
+<div class="row">
+<div class="col-12">
+<div class="page_title_box d-flex align-items-center justify-content-between">
+<div class="page_title_left">
+<h3 class="f_s_30 f_w_700 text_white">Product Details</h3>
+
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-12">
+<div class="white_card position-relative mb_20">
+<div class="card-body">
+<div class="row">
+    {% if ticket.front_image %}
+    <div class="col-lg-6 align-self-center">
+        <img src="{{ ticket.front_image.url }}" alt="Front Image" class="mx-auto d-block sm_w_100" height="300" />
+        </div>
+        {% endif %}
+
+<div class="col-lg-6 align-self-center">
+    <div class="single-pro-detail">
+        <p class="mb-1" style="font-size: 24px; font-weight: bold; color: #333;">{{ ticket.ticket_id }}</p>
+<div class="custom-border mb-3" style="border-bottom: 2px solid #333;"></div>
+<h3 class="pro-title" style="font-size: 28px; color: #333;">{{ ticket.product_name }}</h3>
+<div class="row">
+    <div class="col-md-4">
+        <p style="font-size: 14px; color: #333;">Variant No:</p>
+        <p style="font-size: 14px; color: #FFA500;">{{ ticket.variant_no }}</p>
+        <br>
+        <p style="font-size: 14px; color: #333;">Problem Category:</p>
+        <p style="font-size: 14px; color: #FFA500;">{{ ticket.problem_category }}</p>
+    </div>
+
+    <div class="col-md-4">
+        <p style="font-size: 14px; color: #333;">Date of Purchase:</p>
+        <p style="font-size: 14px; color: #FFA500;">{{ ticket.date_of_purchase }}</p>
+<br>
+        <p style="font-size: 14px; color: #333;">New Ticket ID:</p>
+        <p style="font-size: 14px; color: #FFA500;">{{ ticket.new_ticket_id }}</p>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Display other fields as needed -->
+        <!-- Example: -->
+        <p style="font-size: 18px; color: #333;">Status:</p>
+        <p style="font-size: 18px; color: #FFA500;">{{ ticket.get_status_display }}</p>
+    </div>
+</div>
+
+
+        <!-- Add more fields as needed -->
+
+        <div class="quantity mt-3">
+            <!-- Additional content if needed -->
+        </div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="white_card position-relative mb_20">
+<div class="card-body">
+<h5 class="mt-0" style="font-size: 22px;">Problem Description</h5>
+<p style="font-size: 18px; color: #060400;"> {{ ticket.problem_description }}</p>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        {% if ticket.front_image %}
+        <div class="white_card position-relative mb_20 ">
+            <div class="card-body">
+                <div class="ribbon1 rib1-primary"><span class="text-white text-center rib1-primary">Front Image</span></div>
+                <img src="{{ ticket.front_image.url }}" alt class="d-block mx-auto my-4 img-popup" height="150">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if ticket.back_image %}
+        <div class="white_card position-relative mb_20 ">
+            <div class="card-body">
+                <div class="ribbon1 rib1-primary"><span class="text-white text-center rib1-primary">Back Image</span></div>
+                <img src="{{ ticket.back_image.url }}" alt class="d-block mx-auto my-4 img-popup" height="150">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if ticket.invoice_copy %}
+        <div class="white_card position-relative mb_20 ">
+            <div class="card-body">
+                <div class="ribbon1 rib1-primary"><span class="text-white text-center rib1-primary">Invoice copy</span></div>
+                <img src="{{ ticket.invoice_copy.url }}" alt class="d-block mx-auto my-4 img-popup" height="150">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if ticket.video_of_issue %}
+        <div class="white_card position-relative mb_20">
+            <div class="card-body">
+                <div class="ribbon1 rib1-primary"><span class="text-white text-center rib1-primary">Video of the issue</span></div>
+                <!-- Use the video tag to embed the video with autoplay and muted -->
+                <video controls autoplay muted class="d-block mx-auto my-4 img-popup" style="width: 90%; border-radius:4%; height: 150px;">
+                    <!-- Provide the video source using the URL of the video file -->
+                    <source src="{{ ticket.video_of_issue.url }}"  type="video/mp4">
+                    <!-- You can add additional source elements for different video formats -->
+                    <!-- <source src="path_to_other_video_format" type="video/other_format"> -->
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+<div class="mt-3 d-flex justify-content-end">
+    <a href="{% url 'dashboard_customer_details' tkt_id=ticket.ticket_id %}" class="btn btn-success btn-lg ms-2" >Next</a>
+   
+</div>
+
+
+
+</div>
+</div>
+</div>
+
+<div class="footer_part">
+<div class="container-fluid">
+<div class="row">
+<div class="col-lg-12">
+<div class="footer_iner text-center">
+    <p>2024 © Titan company limited. All Rights Reserved.</p>
+    
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Hidden modal container -->
+<div id="imageModal" class="modal">
+    <span class="close">&times;</span>
+    <div class="modal-content" id="img01"></div>
+</div>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById('imageModal');
+
+    // Get the image and video elements and insert them inside the modal
+    var media = document.querySelectorAll('.img-popup');
+    var modalMedia = document.getElementById('img01');
+
+    media.forEach(function (element) {
+        element.onclick = function () {
+            modal.style.display = 'block';
+            if (element.tagName === 'IMG') {
+                modalMedia.innerHTML = '<img src="' + element.src + '" class="modal-content">';
+                modalMedia.style.display = 'block';
+            } else if (element.tagName === 'VIDEO') {
+                modalMedia.innerHTML = '<video controls autoplay class="modal-content" style="width:100%; height:auto;">' +
+                                       '<source src="' + element.querySelector('source').src + '" type="video/mp4">' +
+                                       'Your browser does not support the video tag.' +
+                                       '</video>';
+                modalMedia.style.display = 'block';
+            }
+        };
+    });
+
+    // Close the modal when the user clicks on <span> (x)
+    var span = document.getElementsByClassName('close')[0];
+    span.onclick = function () {
+        modal.style.display = 'none';
+        modalMedia.innerHTML = ''; // Clear the content when closing the modal
+    };
+
+    // Close the modal when the user clicks outside of it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+            modalMedia.innerHTML = ''; // Clear the content when closing the modal
+        }
+    };
+</script>
+
+{% endblock %}
